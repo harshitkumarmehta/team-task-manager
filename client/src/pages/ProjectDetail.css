@@ -1,0 +1,147 @@
+.section-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.section-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.members-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.member-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #f0f2f5;
+  border: 1px solid #dde0e6;
+  border-radius: 3px;
+  padding: 4px 10px;
+  font-size: 12.5px;
+}
+
+.chip-role {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.chip-remove {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0 0 0 3px;
+  cursor: pointer;
+}
+.chip-remove:hover { color: var(--danger); }
+
+.inline-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.task-form {
+  margin-bottom: 16px;
+  background: #fafaf8;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.tasks-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tasks-table th {
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  background: #f8f7f4;
+}
+
+.tasks-table td {
+  padding: 10px 10px;
+  border-bottom: 1px solid #eeede9;
+  vertical-align: top;
+}
+
+.tasks-table tr:last-child td { border-bottom: none; }
+.tasks-table tr:hover td { background: #fafaf8; }
+
+.row-overdue td { background: #fffaf8; }
+
+.task-title {
+  display: block;
+  font-weight: 500;
+}
+
+.task-desc {
+  display: block;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.overdue-date { color: var(--danger); }
+
+.status-select {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 3px 6px;
+  font-size: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.status-select.status-done {
+  background: #eef6f0;
+  color: var(--success);
+  border-color: #c0dbc8;
+}
+
+.status-select.status-inprogress {
+  background: #eaf0fb;
+  color: var(--accent);
+  border-color: #b8cef0;
+}
+
+.status-select:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
