@@ -1,112 +1,159 @@
 # Team Task Manager
 
-Full-stack task management app with role-based access (Admin/Member).
+A full-stack web app where teams can manage projects and tasks with role-based access. Built as part of a company assignment.
 
-## Stack
-- **Backend**: Node.js + Express + PostgreSQL + JWT
-- **Frontend**: React (Vite) + plain CSS
+**Live:** https://team-task-manager-production-a0dd.up.railway.app  
+**GitHub:** https://github.com/harshitkumarmehta/team-task-manager
 
 ---
 
-## Setup
+## What it does
 
-### 1. Database
+There are two roles — Admin and Member. They have different levels of access.
 
-Create a PostgreSQL database:
+**Admin can:**
+
+- Create, edit and delete projects
+- Add or remove members from a project
+- Create tasks and assign them to members
+- Set priority (low, medium, high) and due dates
+- See the full dashboard with all stats
+
+**Member can:**
+
+- View only the projects they've been added to
+- Update the status of tasks assigned to them (To Do → In Progress → Done)
+- See their own task dashboard
+
+If a task's due date passes and it's still not done, it shows up as overdue on the dashboard. That's automatic, no manual flagging needed.
+
+---
+
+## Tech stack
+
+**Backend**
+
+- Node.js + Express
+- PostgreSQL (raw SQL, no ORM)
+- JWT for auth, bcrypt for passwords
+
+**Frontend**
+
+- React (Vite)
+- Plain CSS — no Tailwind, no component libraries
+
+**Deployed on Railway** — both the server and database run there.
+
+---
+
+## Running it locally
+
+You'll need Node.js and PostgreSQL installed.
+
+**1. Clone the repo**
+
+```bash
+git clone https://github.com/harshitkumarmehta/team-task-manager.git
+cd team-task-manager
 ```
-createdb taskmanager
+
+**2. Set up the database**
+
+```bash
+psql -U postgres -c "CREATE DATABASE taskmanager;"
 psql -U postgres -d taskmanager -f server/db/schema.sql
 ```
 
-### 2. Backend
+**3. Configure the server**
 
 ```bash
 cd server
 cp .env.example .env
-# Edit .env — set DATABASE_URL and JWT_SECRET
-npm install
-npm run dev
 ```
 
-Server runs on http://localhost:5000
+Open `.env` and fill in:
 
-### 3. Frontend
+```
+DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/taskmanager
+JWT_SECRET=any_random_string
+PORT=5000
+```
+
+**4. Start the backend**
 
 ```bash
-cd client
 npm install
 npm run dev
 ```
 
-Client runs on http://localhost:5173
+**5. Start the frontend**
+
+```bash
+cd ../client
+npm install
+npm run dev
+```
+
+Frontend runs on `http://localhost:5173`, backend on `http://localhost:5000`.
 
 ---
 
-## File Structure
+## API endpoints
+
+| Method | Route                             | Who can use it |
+| ------ | --------------------------------- | -------------- |
+| POST   | /api/auth/signup                  | Public         |
+| POST   | /api/auth/login                   | Public         |
+| GET    | /api/projects                     | Admin + Member |
+| POST   | /api/projects                     | Admin only     |
+| DELETE | /api/projects/:id                 | Admin only     |
+| GET    | /api/projects/:id/members         | Admin + Member |
+| POST   | /api/projects/:id/members         | Admin only     |
+| DELETE | /api/projects/:id/members/:userId | Admin only     |
+| GET    | /api/tasks/project/:id            | Admin + Member |
+| POST   | /api/tasks                        | Admin only     |
+| PATCH  | /api/tasks/:id/status             | Admin + Member |
+| DELETE | /api/tasks/:id                    | Admin only     |
+| GET    | /api/dashboard/stats              | Admin + Member |
+| GET    | /api/dashboard/users              | Admin only     |
+
+---
+
+## Folder structure
 
 ```
 team-task-manager/
 ├── server/
-│   ├── index.js                  # Express entry point
-│   ├── .env.example
-│   ├── package.json
+│   ├── index.js
 │   ├── db/
-│   │   ├── db.js                 # PostgreSQL pool
-│   │   └── schema.sql            # Tables: users, projects, project_members, tasks
+│   │   ├── schema.sql
+│   │   └── db.js
 │   ├── middleware/
-│   │   └── auth.js               # JWT auth + adminOnly guard
+│   │   └── auth.js
 │   ├── controllers/
-│   │   ├── authController.js     # signup, login
-│   │   ├── projectController.js  # CRUD + member management
-│   │   ├── taskController.js     # CRUD + status update
-│   │   └── dashboardController.js# stats, all users
+│   │   ├── authController.js
+│   │   ├── projectController.js
+│   │   ├── taskController.js
+│   │   └── dashboardController.js
 │   └── routes/
 │       ├── auth.js
 │       ├── projects.js
 │       ├── tasks.js
 │       └── dashboard.js
-│
 └── client/
-    ├── index.html
-    ├── vite.config.js
-    ├── package.json
     └── src/
-        ├── main.jsx
-        ├── App.jsx               # Routes + auth guards
-        ├── api.js                # fetch wrapper
-        ├── context/
-        │   └── AuthContext.jsx   # user state + localStorage
-        ├── components/
-        │   ├── Layout.jsx        # Sidebar + main wrapper
-        │   └── Layout.css
-        ├── pages/
-        │   ├── Login.jsx / Auth.css
-        │   ├── Signup.jsx
-        │   ├── Dashboard.jsx / Dashboard.css
-        │   ├── Projects.jsx / Projects.css
-        │   └── ProjectDetail.jsx / ProjectDetail.css
-        └── styles/
-            └── global.css
+        ├── App.jsx
+        ├── api.js
+        ├── context/AuthContext.jsx
+        ├── components/Layout.jsx
+        └── pages/
+            ├── Login.jsx
+            ├── Signup.jsx
+            ├── Dashboard.jsx
+            ├── Projects.jsx
+            └── ProjectDetail.jsx
 ```
 
 ---
 
-## API Endpoints
-
-| Method | Path | Access |
-|--------|------|--------|
-| POST | /api/auth/signup | Public |
-| POST | /api/auth/login | Public |
-| GET | /api/projects | Auth |
-| POST | /api/projects | Admin |
-| PUT | /api/projects/:id | Admin |
-| DELETE | /api/projects/:id | Admin |
-| GET | /api/projects/:id/members | Auth |
-| POST | /api/projects/:id/members | Admin |
-| DELETE | /api/projects/:id/members/:userId | Admin |
-| GET | /api/tasks/project/:id | Auth |
-| POST | /api/tasks | Admin |
-| PATCH | /api/tasks/:id/status | Auth |
-| DELETE | /api/tasks/:id | Admin |
-| GET | /api/dashboard/stats | Auth |
-| GET | /api/dashboard/users | Admin |
+Built by [Harshit Kumar Mehta](https://github.com/harshitkumarmehta)
