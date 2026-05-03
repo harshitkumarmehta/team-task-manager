@@ -1,8 +1,12 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+// Railway PostgreSQL sometimes requires SSL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('railway') 
+    ? { rejectUnauthorized: false } 
+    : false
 });
 
 const initDB = async () => {
@@ -46,17 +50,19 @@ const initDB = async () => {
   `;
 
   try {
-    // Basic connectivity check
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL is not defined in environment variables');
+    }
+
+    console.log('Connecting to database...');
     await pool.query('SELECT NOW()');
     console.log('Connected to PostgreSQL successfully');
     
-    // Initialize schema
     await pool.query(schema);
     console.log('Database tables initialized');
   } catch (err) {
-    console.error('DATABASE ERROR: Connection failed.');
-    console.error('Details:', err.message);
-    console.error('ACTION REQUIRED: Ensure PostgreSQL is running locally or your DATABASE_URL is correct in .env');
+    console.error('CRITICAL DATABASE ERROR:', err.message);
+    console.error('Check your DATABASE_URL in Railway Variables.');
   }
 };
 
@@ -64,7 +70,6 @@ pool.on('error', (err) => {
   console.error('Unexpected DB error:', err.message);
 });
 
-// Run initialization
 initDB();
 
 module.exports = pool;
