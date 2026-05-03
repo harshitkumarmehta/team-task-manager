@@ -137,7 +137,7 @@ async function getAllTasks(req, res) {
     }
 
     if (overdue === 'true') {
-      conditions.push(`t.due_date < CURRENT_DATE AND t.status != 'done'`);
+      conditions.push(`t.due_date != '' AND t.due_date::date < CURRENT_DATE AND t.status != 'done'`);
     }
 
     if (conditions.length > 0) {
