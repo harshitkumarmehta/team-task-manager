@@ -1,0 +1,15 @@
+{
+  "name": "team-task-manager-root",
+  "version": "1.0.0",
+  "description": "Root package for team-task-manager monorepo",
+  "scripts": {
+    "install-server": "npm install --prefix server",
+    "install-client": "npm install --prefix client",
+    "build-client": "npm run build --prefix client",
+    "build": "npm run install-server && npm run install-client && npm run build-client",
+    "start": "node server/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
